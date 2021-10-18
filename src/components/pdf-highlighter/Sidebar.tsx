@@ -1,13 +1,17 @@
 import React from "react";
-import type { IHighlight } from "../pdf-highlighter";
+import type { IHighlight, Sentences } from "../pdf-highlighter";
 import "./style/SideBar.css";
 interface Props {
   highlights: Array<IHighlight>;
 }
 
-const updateHash = (highlight: IHighlight) => {
+const updateHashDoc = (highlight: IHighlight) => {
   document.location.hash = `highlight-${highlight.metadata.docID}`;
 };
+
+const updateHashSen = (sentence: Sentences) => {
+  document.location.hash = `sentence-${sentence.senID}`;
+}
 
 export function Sidebar({
   highlights,
@@ -21,21 +25,29 @@ export function Sidebar({
             key={index}
             style={{width: '18vw'}}
             className="sidebar__highlight"
-            onClick={() => {
-              updateHash(highlight);
-            }}
+            // onClick={() => {
+            //   updateHashDoc(highlight);
+            // }}
           >
             <div>
               <br/><br/><b>*********************</b><br/>
-              <strong className={highlight.metadata.color + 'Side'}>{highlight.metadata.title}</strong>
+              <strong className={highlight.metadata.color + 'Side'} 
+              onClick={() => {
+                updateHashDoc(highlight);
+              }
+            }>{highlight.metadata.title}</strong>
               {highlight.sentences ? (
                 highlight.sentences.map((sentence:any, i:number) => (
-                  <blockquote style={{ marginTop: "0.5rem" }}>
+                  <div onClick={() => {
+                    updateHashSen(sentence);
+                  }}>
+                    <blockquote style={{ marginTop: "0.5rem" }}>
                     {`${sentence.text.slice(0, 150).trim()}...`}<br/>
                     <b>Similarity: {sentence.euclide}</b>
                     <br/>
                     ------------------------
                   </blockquote>
+                  </div>
                 ))) : null
               }
               

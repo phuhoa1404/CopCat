@@ -95,12 +95,12 @@ export const txtHighlights = [
           },
           sentences: [
             {
-              senID: "number01",
+              senID: "number02",
               text: "DEF",
               euclide: 0.1234,
             },
             {
-              senID: "number02",
+              senID: "number03",
               text: "ghi",
               euclide: 0.45646,
             }

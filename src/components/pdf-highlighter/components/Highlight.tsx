@@ -52,7 +52,7 @@ export class Highlight extends Component<Props> {
               onClick={onClick}
               key={index}
               style={rect}
-              className={`Highlight__part`}
+              className={metadata.color}
             />
           ))}
         </div>
