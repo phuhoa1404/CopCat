@@ -10,11 +10,12 @@ import {
 } from "./pdf-highlighter";
 
 import type { IHighlight } from "./pdf-highlighter";
-import { txtHighlights as _testHighlights } from "./pdf-highlighter/highlight-txt";
+import { testHighlights as _testHighlights } from "./pdf-highlighter/test-highlights";
 import { Spinner } from "./pdf-highlighter/Spinner";
 import { Sidebar } from "./pdf-highlighter/Sidebar";
+import { AreaHighlight } from 'react-pdf-highlighter';
 
-const testHighlights: Array<IHighlight> = _testHighlights;
+const testHighlights: Record<string, Array<IHighlight>> = _testHighlights;
 
 
 interface IState {
@@ -113,8 +114,8 @@ interface IState {
           />
           <div
             style={{
-              height: "99vh",
-              width: "80vw",
+              height: "100vh",
+              width: "75vw",
               position: "relative",
             }}
           >
@@ -129,7 +130,21 @@ interface IState {
                     scrollViewerTo(scrollTo);
   
                     scrollToHighlightFromHash();
-                  }}  
+                  }}
+                  onSelectionFinished={(
+                    position,
+                    content,
+                    hideTipAndSelection,
+                    transformSelection
+                  ) => (
+                    <Tip
+                      onOpen={transformSelection}
+                      onConfirm={(comment) => {
+  
+                        hideTipAndSelection();
+                      }}
+                    />
+                  )}
                   highlightTransform={(
                     highlight,
                     index,
@@ -139,18 +154,33 @@ interface IState {
                     screenshot,
                     isScrolledTo
                   ) => {
-                    const isTextHighlight = !Boolean(highlight.metadata);
+                    const isTextHighlight = !Boolean(
+                      highlight.content && highlight.content.image
+                    );
   
-                    const component = 
+                    const component = isTextHighlight ? (
                       <Highlight
                         isScrolledTo={isScrolledTo}
                         position={highlight.position}
-                        metadata={highlight.metadata}
-                      />;
+                        comment={highlight.comment}
+                      />
+                    ) : (
+                      <AreaHighlight
+                        isScrolledTo={isScrolledTo}
+                        highlight={highlight}
+                        onChange={(boundingRect) => {
+                          
+                        }}
+                      />
+                    );
   
                     return (
                       <Popup
-                        // popupContent={<HighlightPopup {...highlight} />}
+                        popupContent={<HighlightPopup {...highlight} />}
+                        onMouseOver={(popupContent) =>
+                          setTip(highlight, (highlight) => popupContent)
+                        }
+                        onMouseOut={hideTip}
                         key={index}
                         children={component}
                       />
@@ -163,7 +193,8 @@ interface IState {
           </div>
         </div>
       );
-      
     }
+      
+
 
 export default PDF

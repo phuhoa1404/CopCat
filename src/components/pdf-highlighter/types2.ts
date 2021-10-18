@@ -31,35 +31,26 @@ export interface ScaledPosition {
   usePdfCoordinates?: boolean;
 }
 
-export interface Content {
-  text?: string;
-  image?: string;
+export interface MetaData {
+  docID: string;
+  title?: string;
+  author?: string;
+  publish?: number;
+  color?: string;
 }
 
-export interface HighlightContent {
-  content: Content;
-}
-
-export interface Comment {
+export interface Sentences{
+  id: string;
   text: string;
-  emoji: string;
-}
-
-export interface HighlightComment {
-  comment: Comment;
-}
-
-export interface NewHighlight extends HighlightContent, HighlightComment {
+  euclide: number;
   position: ScaledPosition;
 }
 
-export interface IHighlight extends NewHighlight {
-  id: string;
+export interface IHighlight{
+  metadata: MetaData;
+  sentences: Array<Sentences>;
 }
 
-export interface ViewportHighlight extends HighlightContent, HighlightComment {
-  position: Position;
-}
 
 export interface Viewport {
   convertToPdfPoint: (x: number, y: number) => Array<number>;

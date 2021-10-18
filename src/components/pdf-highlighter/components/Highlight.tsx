@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import "../style/Highlight.css";
 
-import type { LTWH, MetaData } from "../types.js";
+import type { LTWH } from "../types.js";
 
 interface Props {
   position: {
@@ -12,7 +12,10 @@ interface Props {
   onClick?: () => void;
   onMouseOver?: () => void;
   onMouseOut?: () => void;
-  metadata: MetaData;
+  comment: {
+    emoji: string;
+    text: string;
+  };
   isScrolledTo: boolean;
 }
 
@@ -23,8 +26,8 @@ export class Highlight extends Component<Props> {
       onClick,
       onMouseOver,
       onMouseOut,
-      metadata,
-      isScrolledTo
+      comment,
+      isScrolledTo,
     } = this.props;
 
     const { rects, boundingRect } = position;
@@ -33,7 +36,7 @@ export class Highlight extends Component<Props> {
       <div
         className={`Highlight ${isScrolledTo ? "Highlight--scrolledTo" : ""}`}
       >
-        {metadata ? (
+        {comment ? (
           <div
             className="Highlight__emoji"
             style={{
@@ -41,7 +44,7 @@ export class Highlight extends Component<Props> {
               top: boundingRect.top,
             }}
           >
-            {metadata.title}
+            {comment.emoji}
           </div>
         ) : null}
         <div className="Highlight__parts">
@@ -52,7 +55,7 @@ export class Highlight extends Component<Props> {
               onClick={onClick}
               key={index}
               style={rect}
-              className={metadata.color}
+              className={`Highlight__part`}
             />
           ))}
         </div>

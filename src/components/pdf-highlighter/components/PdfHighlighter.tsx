@@ -81,6 +81,12 @@ interface Props<T_HT> {
   scrollRef: (scrollTo: (highlight: IHighlight) => void) => void;
   pdfDocument: PDFDocumentProxy;
   pdfScaleValue: string;
+  onSelectionFinished: (
+    position: ScaledPosition,
+    content: { text?: string; image?: string },
+    hideTipAndSelection: () => void,
+    transformSelection: () => void
+  ) => JSX.Element | null;
   enableAreaSelection: (event: MouseEvent) => boolean;
 }
 
@@ -213,7 +219,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     return [...highlights, ghostHighlight]
       .filter(Boolean)
       .reduce((res, highlight) => {
-        const { pageNumber } = highlight!.pageNumber;
+        const { pageNumber } = highlight!.position;
 
         res[pageNumber] = res[pageNumber] || [];
         res[pageNumber].push(highlight);
@@ -488,6 +494,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
   };
 
   afterSelection = () => {
+    const { onSelectionFinished } = this.props;
 
     const { isCollapsed, range } = this.state;
 
@@ -516,6 +523,21 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     };
     const scaledPosition = this.viewportPositionToScaled(viewportPosition);
 
+    this.setTip(
+      viewportPosition,
+      onSelectionFinished(
+        scaledPosition,
+        content,
+        () => this.hideTipAndSelection(),
+        () =>
+          this.setState(
+            {
+              ghostHighlight: { position: scaledPosition },
+            },
+            () => this.renderHighlights()
+          )
+      )
+    );
   };
 
   debouncedAfterSelection: () => void = debounce(this.afterSelection, 500);
@@ -536,6 +558,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
   debouncedScaleValue: () => void = debounce(this.handleScaleValue, 500);
 
   render() {
+    const { onSelectionFinished, enableAreaSelection } = this.props;
 
     return (
       <div onPointerDown={this.onMouseDown}>
@@ -546,6 +569,66 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
         >
           <div className="pdfViewer" />
           {this.renderTip()}
+          {typeof enableAreaSelection === "function" ? (
+            <MouseSelection
+              onDragStart={() => this.toggleTextSelection(true)}
+              onDragEnd={() => this.toggleTextSelection(false)}
+              onChange={(isVisible) =>
+                this.setState({ isAreaSelectionInProgress: isVisible })
+              }
+              shouldStart={(event) =>
+                enableAreaSelection(event) &&
+                isHTMLElement(event.target) &&
+                Boolean(asElement(event.target).closest(".page"))
+              }
+              onSelection={(startTarget, boundingRect, resetSelection) => {
+                const page = getPageFromElement(startTarget);
+
+                if (!page) {
+                  return;
+                }
+
+                const pageBoundingRect = {
+                  ...boundingRect,
+                  top: boundingRect.top - page.node.offsetTop,
+                  left: boundingRect.left - page.node.offsetLeft,
+                };
+
+                const viewportPosition = {
+                  boundingRect: pageBoundingRect,
+                  rects: [],
+                  pageNumber: page.number,
+                };
+
+                const scaledPosition =
+                  this.viewportPositionToScaled(viewportPosition);
+
+                const image = this.screenshot(pageBoundingRect, page.number);
+
+                this.setTip(
+                  viewportPosition,
+                  onSelectionFinished(
+                    scaledPosition,
+                    { image },
+                    () => this.hideTipAndSelection(),
+                    () =>
+                      this.setState(
+                        {
+                          ghostHighlight: {
+                            position: scaledPosition,
+                            content: { image },
+                          },
+                        },
+                        () => {
+                          resetSelection();
+                          this.renderHighlights();
+                        }
+                      )
+                  )
+                );
+              }}
+            />
+          ) : null}
         </div>
       </div>
     );
