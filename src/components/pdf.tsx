@@ -129,7 +129,19 @@ interface IState {
                     scrollViewerTo(scrollTo);
   
                     scrollToHighlightFromHash();
-                  }}  
+                  }} 
+                  onSelectionFinished={(
+                    position,
+                    content,
+                    hideTipAndSelection,
+                    transformSelection
+                  ) => (
+                    <Tip
+                      onOpen={transformSelection}
+                      onConfirm={(comment) => {
+                        }}
+                    />
+                  )} 
                   highlightTransform={(
                     highlight,
                     index,

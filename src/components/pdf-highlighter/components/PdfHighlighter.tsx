@@ -40,7 +40,7 @@ import type {
   LTWH,
   T_EventBus,
   T_PDFJS_Viewer,
-  T_PDFJS_LinkService,
+  T_PDFJS_LinkService
 } from "../types";
 import type { PDFDocumentProxy } from "pdfjs-dist/types/display/api";
 
@@ -49,7 +49,7 @@ type T_ViewportHighlight<T_HT> = { position: Position } & T_HT;
 interface State<T_HT> {
   ghostHighlight: {
     position: ScaledPosition;
-    content?: { text?: string; image?: string };
+    content?: { text?: string;}
   } | null;
   isCollapsed: boolean;
   range: Range | null;
@@ -81,6 +81,12 @@ interface Props<T_HT> {
   scrollRef: (scrollTo: (highlight: IHighlight) => void) => void;
   pdfDocument: PDFDocumentProxy;
   pdfScaleValue: string;
+  onSelectionFinished: (
+    position: ScaledPosition,
+    content: { text?: string; },
+    hideTipAndSelection: () => void,
+    transformSelection: () => void
+  ) => JSX.Element | null;
   enableAreaSelection: (event: MouseEvent) => boolean;
 }
 
@@ -213,7 +219,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     return [...highlights, ghostHighlight]
       .filter(Boolean)
       .reduce((res, highlight) => {
-        const { pageNumber } = highlight!.pageNumber;
+        const { pageNumber } = highlight!.position;
 
         res[pageNumber] = res[pageNumber] || [];
         res[pageNumber].push(highlight);
@@ -488,8 +494,8 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
   };
 
   afterSelection = () => {
-
     const { isCollapsed, range } = this.state;
+    const { onSelectionFinished } = this.props;
 
     if (!range || isCollapsed) {
       return;
@@ -515,6 +521,21 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
       text: range.toString(),
     };
     const scaledPosition = this.viewportPositionToScaled(viewportPosition);
+    this.setTip(
+      viewportPosition,
+      onSelectionFinished(
+        scaledPosition,
+        content,
+        () => this.hideTipAndSelection(),
+        () =>
+          this.setState(
+            {
+              ghostHighlight: { position: scaledPosition },
+            },
+            () => this.renderHighlights()
+          )
+      )
+    );
 
   };
 
@@ -536,7 +557,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
   debouncedScaleValue: () => void = debounce(this.handleScaleValue, 500);
 
   render() {
-
+    const { onSelectionFinished, enableAreaSelection } = this.props;
     return (
       <div onPointerDown={this.onMouseDown}>
         <div
@@ -546,6 +567,8 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
         >
           <div className="pdfViewer" />
           {this.renderTip()}
+          
+          
         </div>
       </div>
     );

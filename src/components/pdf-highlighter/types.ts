@@ -40,16 +40,22 @@ export interface MetaData {
 }
 
 export interface Sentences{
-  id: string;
+  senID: string;
   text: string;
   euclide: number;
-  position: ScaledPosition;
 }
 
 export interface IHighlight{
+  id: string;
   metadata: MetaData;
   sentences: Array<Sentences>;
+  position: ScaledPosition;
 }
+
+export interface ViewportHighlight extends Sentences {
+  position: Position;
+}
+
 
 
 export interface Viewport {
