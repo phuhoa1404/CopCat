@@ -37,6 +37,7 @@ export interface MetaData {
   author?: string;
   publish?: number;
   color?: string;
+  university?: string;
 }
 
 export interface Sentences{

@@ -19,7 +19,7 @@ import { Sidebar } from "./pdf-highlighter/Sidebar";
 import { convertSentenceHighlight } from './utils/sentence.util';
 
 const testHighlights: Array<IHighlight> = _testHighlights;
-const senHighlights = convertSentenceHighlight(testHighlights);
+const senHighlights: Array<Sentences> = convertSentenceHighlight(testHighlights);
 
 
 interface IState {
@@ -27,7 +27,7 @@ interface IState {
     highlights: Array<IHighlight>;
   }
   
-  const getNextId = () => String(Math.random()).slice(2);
+  // const getNextId = () => String(Math.random()).slice(2);
   
   const parseIdFromHash = () =>
     document.location.hash.slice("#sentence-".length);
@@ -39,16 +39,16 @@ interface IState {
   
 
   
-  const HighlightPopup = ({
-    comment,
-  }: {
-    comment: { text: string; emoji: string };
-  }) =>
-    comment.text ? (
-      <div className="Highlight__popup">
-        {comment.emoji} {comment.text}
-      </div>
-    ) : null;
+  // const HighlightPopup = ({
+  //   comment,
+  // }: {
+  //   comment: { text: string; emoji: string };
+  // }) =>
+  //   comment.text ? (
+  //     <div className="Highlight__popup">
+  //       {comment.emoji} {comment.text}
+  //     </div>
+  //   ) : null;
   
   const PRIMARY_PDF_URL = "https://arxiv.org/pdf/1708.08021.pdf";
   const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480.pdf";
@@ -62,24 +62,27 @@ interface IState {
   export const PDF = (props: IState) => {
 
     const data = useSelector((state: RootState) => state.global.highlightSentence);
-    
+    const returnURL = useSelector((state: RootState) => state.global.url);
+    const dataSens = convertSentenceHighlight(data)
+    console.log("URL:", returnURL);
     // if (data) {
     //   console.log("Data:", data?.url);}
 
     // console.log("testHighLight:", testHighlights)
 
+    const state = {
+      url: returnURL,
+      highlights: data,
+      highlightSens: dataSens
+    };
+
     // const state = {
     //   url: initialUrl,
-    //   highlights: data.url[0][0]
+    //   highlights: testHighlights
+    //     ? [...testHighlights]
+    //     : [],
+    //   highlightSens: senHighlights ? [...senHighlights] : []
     // };
-
-    const state = {
-      url: initialUrl,
-      highlights: testHighlights
-        ? [...testHighlights]
-        : [],
-      highlightSens: senHighlights ? [...senHighlights] : []
-    };
   
     // const setState = (url:any, highlight:any) => {
     //   state.url = url;
@@ -139,7 +142,7 @@ interface IState {
                   pdfDocument={pdfDocument}
                   enableAreaSelection={(event) => event.altKey}
                   onScrollChange={resetHash}
-                  pdfScaleValue="0.85"
+                  pdfScaleValue="0.95"
                   scrollRef={(scrollTo) => {
                     scrollViewerTo(scrollTo);
   

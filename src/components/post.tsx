@@ -34,8 +34,11 @@ export const Post = () => {
             if(!selectedFile) return;
             setLoading(true);
             var formData = new FormData();
-            formData.append("file",selectedFile,selectedFile?.name);
+            formData.append("file",selectedFile);
+            formData.append("filename", selectedFile.name)
+
             const { data: apiResponse } =  await Flask.post('/search',formData);
+            console.log("Return", apiResponse)
             patchResponseAPI(apiResponse)
             // window.location.replace('http://localhost:3000/pdf')
         }

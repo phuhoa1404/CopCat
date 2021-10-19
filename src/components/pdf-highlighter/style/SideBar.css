@@ -5,3 +5,43 @@
 .blueSide{
     color: rgb(31, 88, 245);
 }
+
+.greenSide {
+    color: rgb(62, 247, 117);
+  }
+  
+.purpleSide {
+color: rgb(221, 93, 247);
+}
+
+.orangeSide  {
+color: orange
+  }
+  
+.yellowSide  {
+color: rgb(209, 209, 2)
+}
+
+.brownSide  {
+color: rgb(197, 159, 130)
+}
+
+.pinkSide  {
+color: pink
+}
+
+.greySide  {
+color: grey
+}
+
+.cyanSide  {
+color: rgb(6, 194, 194)
+}
+
+.violetSide  {
+color: violet
+}
+
+.crimsonSide  {
+color: #ce4e72
+}

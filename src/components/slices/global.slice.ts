@@ -14,7 +14,8 @@ const globalSlice = createSlice({
         },
         dataMatch: {
         },
-        highlightSentence: [] as any
+        highlightSentence: [] as any,
+        url: ''
     },
     reducers: {
         toggleInPageLogin: (state, action) => {
@@ -34,8 +35,10 @@ const globalSlice = createSlice({
         setData: (
         state, { payload }: PayloadAction<any>) => {
         if (!payload) return;
-        state.highlightSentence = convertHighlight(payload)
-        console.log("After Convert:", state.highlightSentence)
+        state.highlightSentence = payload.Result;
+        state.url = payload.URL
+        // state.highlightSentence = convertHighlight(payload)
+        // console.log("After Convert:", state.highlightSentence)
         },
     }
 

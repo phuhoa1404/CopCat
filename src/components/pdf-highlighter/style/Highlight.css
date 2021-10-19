@@ -23,14 +23,84 @@
 .blue {
   cursor: pointer;
   position: absolute;
-  background: rgb(152, 207, 252);
+  background: rgb(33, 33, 245);
   transition: background 0.3s;
 }
 
 .red {
   cursor: pointer;
   position: absolute;
-  background: rgb(250, 197, 201);
+  background: rgb(236, 102, 102);
+  transition: background 0.3s;
+}
+
+.green {
+  cursor: pointer;
+  position: absolute;
+  background: rgb(40, 221, 40);
+  transition: background 0.3s;
+}
+
+.purple {
+  cursor: pointer;
+  position: absolute;
+  background: rgb(228, 29, 228);
+  transition: background 0.3s;
+}
+
+.orange {
+  cursor: pointer;
+  position: absolute;
+  background: rgb(248, 174, 37);
+  transition: background 0.3s;
+}
+
+.yellow {
+  cursor: pointer;
+  position: absolute;
+  background: rgb(255, 255, 0);
+  transition: background 0.3s;
+}
+
+.brown {
+  cursor: pointer;
+  position: absolute;
+  background: rgb(197, 159, 130);
+  transition: background 0.3s;
+}
+
+.pink {
+  cursor: pointer;
+  position: absolute;
+  background: rgb(255, 192, 203);
+  transition: background 0.3s;
+}
+
+.grey {
+  cursor: pointer;
+  position: absolute;
+  background: rgb(128, 128, 128);
+  transition: background 0.3s;
+}
+
+.cyan {
+  cursor: pointer;
+  position: absolute;
+  background: rgb(0, 255, 255);
+  transition: background 0.3s;
+}
+
+.violet {
+  cursor: pointer;
+  position: absolute;
+  background: rgb(238, 130, 238);
+  transition: background 0.3s;
+}
+
+.crimson {
+  cursor: pointer;
+  position: absolute;
+  background: #ca6f89;
   transition: background 0.3s;
 }
 

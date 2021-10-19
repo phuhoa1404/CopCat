@@ -23,7 +23,7 @@ export function Sidebar({
         {highlights.map((highlight, index) => (
           <li
             key={index}
-            style={{width: '23vw'}}
+            style={{width: '22vw'}}
             className="sidebar__highlight"
             // onClick={() => {
             //   updateHashDoc(highlight);
@@ -50,6 +50,7 @@ export function Sidebar({
             </div>
             <div className="highlight__location">
               <i>Author: {highlight.metadata.author}</i><br/>
+              <p>University/College: {highlight.metadata.university || "Unknown"}</p>
               <p>Published: {highlight.metadata.publish}</p>
             </div>
           </li>
