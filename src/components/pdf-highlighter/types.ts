@@ -44,13 +44,13 @@ export interface Sentences{
   text: string;
   euclide: number;
   sentencePosition: ScaledPosition;
+  color: string;
 }
 
 export interface IHighlight{
   id: string;
   metadata: MetaData;
   sentences: Array<Sentences>;
-  position: ScaledPosition;
 }
 
 export interface ViewportHighlight extends Sentences {

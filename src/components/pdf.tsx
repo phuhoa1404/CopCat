@@ -16,8 +16,10 @@ import type { IHighlight } from "./pdf-highlighter";
 import { txtHighlights as _testHighlights } from "./pdf-highlighter/highlight-txt";
 import { Spinner } from "./pdf-highlighter/Spinner";
 import { Sidebar } from "./pdf-highlighter/Sidebar";
+import { convertSentenceHighlight } from './utils/sentence.util';
 
 const testHighlights: Array<IHighlight> = _testHighlights;
+const senHighlights = convertSentenceHighlight(testHighlights);
 
 
 interface IState {
@@ -76,12 +78,13 @@ interface IState {
       highlights: testHighlights
         ? [...testHighlights]
         : [],
+      highlightSens: senHighlights ? [...senHighlights] : []
     };
   
-    const setState = (url:any, highlight:any) => {
-      state.url = url;
-      state.highlights = highlight;
-    }
+    // const setState = (url:any, highlight:any) => {
+    //   state.url = url;
+    //   state.highlights = highlight;
+    // }
     
     const scrollViewerTo = (highlight: any) => {};
     
@@ -116,7 +119,7 @@ interface IState {
         return highlights;
       }
 
-      const { url, highlights } = state;
+      const { url, highlights, highlightSens } = state;
   
       return (
         <div className="App" style={{ display: "flex", height: "100vh" }}>
@@ -126,7 +129,7 @@ interface IState {
           <div
             style={{
               height: "99vh",
-              width: "80vw",
+              width: "75vw",
               position: "relative",
             }}
           >
@@ -136,7 +139,7 @@ interface IState {
                   pdfDocument={pdfDocument}
                   enableAreaSelection={(event) => event.altKey}
                   onScrollChange={resetHash}
-                  pdfScaleValue="0.8"
+                  pdfScaleValue="0.85"
                   scrollRef={(scrollTo) => {
                     scrollViewerTo(scrollTo);
   
@@ -163,7 +166,7 @@ interface IState {
                     screenshot,
                     isScrolledTo
                   ) => {
-                    const isTextHighlight = !Boolean(highlight.metadata);
+                    // const isTextHighlight = !Boolean(highlight.metadata);
                     
                     // highlight.sentences.map((sentence: any) => {
                     //   const component = 
@@ -184,7 +187,7 @@ interface IState {
                       <Highlight
                         isScrolledTo={isScrolledTo}
                         position={highlight.position}
-                        metadata={highlight.metadata}
+                        metadata={highlight}
                       />;
   
                     return (
@@ -195,7 +198,7 @@ interface IState {
                       />
                     );
                   }}
-                  highlights={highlights}
+                  highlights={highlightSens}
                 />
               )}
             </PdfLoader>

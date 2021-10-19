@@ -11,11 +11,11 @@ interface Props {
   };
   onClick?: () => void;
   metadata: {
-    docID: string;
-    title?: string;
-    author?: string;
-    publish?: number;
-    color?: string;
+    // docID: string;
+    // title?: string;
+    // author?: string;
+    // publish?: number;
+    color: string;
   };
   isScrolledTo: boolean;
 }

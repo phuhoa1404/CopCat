@@ -17,20 +17,19 @@ export function Sidebar({
   highlights,
 }: Props) {
   return (
-    <div className="sidebar" style={{ width: "20vw", height: "95vh" }}>
+    <div className="sidebar" style={{ width: "25vw", height: "99vh" }}>
 
       <ul className="sidebar__highlights" style={{paddingLeft:0}}>
         {highlights.map((highlight, index) => (
           <li
             key={index}
-            style={{width: '18vw'}}
+            style={{width: '23vw'}}
             className="sidebar__highlight"
             // onClick={() => {
             //   updateHashDoc(highlight);
             // }}
           >
             <div>
-              <br/><br/><b>*********************</b><br/>
               <strong className={highlight.metadata.color + 'Side'}>
                 {highlight.metadata.title}</strong>
               {highlight.sentences ? (

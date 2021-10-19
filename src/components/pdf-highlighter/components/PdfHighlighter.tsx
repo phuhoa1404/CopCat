@@ -49,8 +49,8 @@ type T_ViewportHighlight<T_HT> = { position: Position } & T_HT;
 
 interface State<T_HT> {
   ghostHighlight: {
-    position: ScaledPosition;
-    content?: { text?: string;}
+    sentencePosition: ScaledPosition;
+    text?: string ;
   } | null;
   isCollapsed: boolean;
   range: Range | null;
@@ -84,7 +84,7 @@ interface Props<T_HT> {
   pdfScaleValue: string;
   onSelectionFinished: (
     position: ScaledPosition,
-    content: { text?: string; },
+    content: { text?: string; image?: string },
     hideTipAndSelection: () => void,
     transformSelection: () => void
   ) => JSX.Element | null;
@@ -93,7 +93,7 @@ interface Props<T_HT> {
 
 const EMPTY_ID = "empty-id";
 
-export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
+export class PdfHighlighter<T_HT extends Sentences> extends PureComponent<
   Props<T_HT>,
   State<T_HT>
 > {
@@ -220,7 +220,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     return [...highlights, ghostHighlight]
       .filter(Boolean)
       .reduce((res, highlight) => {
-        const { pageNumber } = highlight!.position;
+        const { pageNumber } = highlight!.sentencePosition;
 
         res[pageNumber] = res[pageNumber] || [];
         res[pageNumber].push(highlight);
@@ -295,19 +295,19 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
         ReactDom.render(
           <div>
             {(highlightsByPage[String(pageNumber)] || []).map(
-              ({ position, id, ...highlight }, index) => {
+              ({ sentencePosition, senID, ...highlight }, index) => {
                 // @ts-ignore
                 const viewportHighlight: T_ViewportHighlight<T_HT> = {
-                  id,
-                  position: this.scaledPositionToViewport(position),
+                  senID,
+                  position: this.scaledPositionToViewport(sentencePosition),
                   ...highlight,
                 };
 
-                if (tip && tip.highlight.id === String(id)) {
+                if (tip && tip.highlight.senID === String(senID)) {
                   this.showTip(tip.highlight, tip.callback(viewportHighlight));
                 }
 
-                const isScrolledTo = Boolean(scrolledToHighlightId === id);
+                const isScrolledTo = Boolean(scrolledToHighlightId === senID);
 
                 return highlightTransform(
                   viewportHighlight,
@@ -495,8 +495,9 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
   };
 
   afterSelection = () => {
-    const { isCollapsed, range } = this.state;
     const { onSelectionFinished } = this.props;
+
+    const { isCollapsed, range } = this.state;
 
     if (!range || isCollapsed) {
       return;
@@ -522,6 +523,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
       text: range.toString(),
     };
     const scaledPosition = this.viewportPositionToScaled(viewportPosition);
+
     this.setTip(
       viewportPosition,
       onSelectionFinished(
@@ -531,13 +533,12 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
         () =>
           this.setState(
             {
-              ghostHighlight: { position: scaledPosition },
+              ghostHighlight: { sentencePosition: scaledPosition },
             },
             () => this.renderHighlights()
           )
       )
     );
-
   };
 
   debouncedAfterSelection: () => void = debounce(this.afterSelection, 500);
@@ -559,6 +560,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
 
   render() {
     const { onSelectionFinished, enableAreaSelection } = this.props;
+
     return (
       <div onPointerDown={this.onMouseDown}>
         <div
@@ -568,8 +570,65 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
         >
           <div className="pdfViewer" />
           {this.renderTip()}
-          
-          
+          {typeof enableAreaSelection === "function" ? (
+            <MouseSelection
+              onDragStart={() => this.toggleTextSelection(true)}
+              onDragEnd={() => this.toggleTextSelection(false)}
+              onChange={(isVisible) =>
+                this.setState({ isAreaSelectionInProgress: isVisible })
+              }
+              shouldStart={(event) =>
+                enableAreaSelection(event) &&
+                isHTMLElement(event.target) &&
+                Boolean(asElement(event.target).closest(".page"))
+              }
+              onSelection={(startTarget, boundingRect, resetSelection) => {
+                const page = getPageFromElement(startTarget);
+
+                if (!page) {
+                  return;
+                }
+
+                const pageBoundingRect = {
+                  ...boundingRect,
+                  top: boundingRect.top - page.node.offsetTop,
+                  left: boundingRect.left - page.node.offsetLeft,
+                };
+
+                const viewportPosition = {
+                  boundingRect: pageBoundingRect,
+                  rects: [],
+                  pageNumber: page.number,
+                };
+
+                const scaledPosition =
+                  this.viewportPositionToScaled(viewportPosition);
+
+                const image = this.screenshot(pageBoundingRect, page.number);
+
+                this.setTip(
+                  viewportPosition,
+                  onSelectionFinished(
+                    scaledPosition,
+                    { image },
+                    () => this.hideTipAndSelection(),
+                    () =>
+                      this.setState(
+                        {
+                          ghostHighlight: {
+                            sentencePosition: scaledPosition
+                          },
+                        },
+                        () => {
+                          resetSelection();
+                          this.renderHighlights();
+                        }
+                      )
+                  )
+                );
+              }}
+            />
+          ) : null}
         </div>
       </div>
     );

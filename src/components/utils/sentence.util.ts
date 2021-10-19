@@ -1,5 +1,7 @@
 // import { IHighlightPDF } from '../utils/models/pdf.model';
 
+import { IHighlight, Sentences } from "../pdf-highlighter"
+
 export const convertHighlight = (input: any) => {
     // console.log("InsideConvert:", input.Result);
     const bRects = {
@@ -39,6 +41,16 @@ export const convertHighlight = (input: any) => {
         output.url.push(eachPage)
     })
     return output
+}
+
+export const convertSentenceHighlight = (input: Array<IHighlight>) => {
+  const output: Array<Sentences> = [];
+  input.map((doc:IHighlight, index:number) => {
+    doc.sentences.map((sen: Sentences) => {
+      output.push(sen);
+    })
+  });
+  return output
 }
 
 export const txtHighlights = {
