@@ -1,0 +1,48 @@
+$color-purple-1: #9B99FF;
+$color-purple-2: #5551FF;
+$color-purple-3: #211FCC;
+$color-purple-4: #201F66;
+
+$color-green: #19AFA7;
+$color-red: #E7483D;
+$color-orange: #FEB446;
+
+$color-white: #ffffff;
+$color-white-1:#e6e6ec;
+$color-grey-1: #f8f8f8;
+$color-grey-2: #f0f3f6;
+$color-grey-3: #f0f0f0;
+$color-grey-4: #b2b3bc;
+$color-grey-5: #7f8090;
+$color-grey-6: #54566c;
+$color-grey-7: #30244a;
+$color-grey-8: #050a38;
+$color-grey-light: #E6E6EC;
+$color-sonnant-dark-blue:#050A38;
+$color-logo: #2B2AA9;
+
+$bg-confidence-low: rgba(231, 72, 61, 0.5);
+$bg-confidence-medium: rgba(254, 180, 70, 0.5);
+
+$border-confidence-low: #e7483d;
+$border-confidence-medium: #feb446;
+
+$bg-search-term: #19AFA7;
+$bg-human-selection: rgba(33, 31, 204, 0.25);
+
+// FONT
+$default-font-size: 1.8rem;
+
+// FIXED ITEM HEIGHT
+$navbar-height: 70px;
+$toolbar-height: 60px;
+$fixed-top-height: 130px;
+
+$media-track-height: 80px;
+
+$player-fixed-height: $navbar-height + $toolbar-height + $media-track-height;
+
+$player-available-height: calc(100vh - #{$player-fixed-height});
+
+$color-black: #000;
+$color-white: #fff;

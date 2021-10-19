@@ -6,6 +6,8 @@ import { LogIn } from './components/login';
 import { SignUp } from './components/signup';
 import { Post } from './components/post';
 import PDF from './components/pdf'
+import { PageNotFound } from './components/PageNotFound';
+import { NavBar } from './components/NavBar'
 import { useEffect } from 'react';
 // import Flask from './api/flask'
 import './App.css';
@@ -22,6 +24,7 @@ export function App() {
 
   return (
     <div className="App">
+      <NavBar />
       <Switch>
         <PublicRoute path="/signin" exact component={LogIn} />
 
@@ -32,6 +35,11 @@ export function App() {
         <PublicRoute path="/post" exact component={Post}/>
 
         <PublicRoute path="/home" exact component={Home}/>
+
+        <Route path="/404" component={PageNotFound} />
+        <Route path="*">
+          <Redirect to="/404" />
+        </Route>
       </Switch>
     </div>
   );

@@ -125,13 +125,13 @@ interface IState {
       const { url, highlights, highlightSens } = state;
   
       return (
-        <div className="App" style={{ display: "flex", height: "100vh" }}>
+        <div className="App" style={{ display: "flex", height: "90vh" }}>
           <Sidebar
             highlights={highlights}
           />
           <div
             style={{
-              height: "99vh",
+              height: "93vh",
               width: "75vw",
               position: "relative",
             }}
@@ -142,7 +142,7 @@ interface IState {
                   pdfDocument={pdfDocument}
                   enableAreaSelection={(event) => event.altKey}
                   onScrollChange={resetHash}
-                  pdfScaleValue="0.95"
+                  pdfScaleValue="1"
                   scrollRef={(scrollTo) => {
                     scrollViewerTo(scrollTo);
   
