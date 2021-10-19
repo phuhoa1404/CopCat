@@ -43,6 +43,7 @@ export interface Sentences{
   senID: string;
   text: string;
   euclide: number;
+  sentencePosition: ScaledPosition;
 }
 
 export interface IHighlight{

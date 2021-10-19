@@ -6,8 +6,11 @@ import {
   PdfHighlighter,
   Tip,
   Highlight,
-  Popup
+  Popup,
+  Sentences
 } from "./pdf-highlighter";
+
+import "./pdf-highlighter/style/App.css";
 
 import type { IHighlight } from "./pdf-highlighter";
 import { txtHighlights as _testHighlights } from "./pdf-highlighter/highlight-txt";
@@ -25,7 +28,7 @@ interface IState {
   const getNextId = () => String(Math.random()).slice(2);
   
   const parseIdFromHash = () =>
-    document.location.hash.slice("#highlight-".length);
+    document.location.hash.slice("#sentence-".length);
   
   const resetHash = () => {
     document.location.hash = "";
@@ -58,10 +61,10 @@ interface IState {
 
     const data = useSelector((state: RootState) => state.global.highlightSentence);
     
-    if (data) {
-      console.log("Data:", data?.url);}
+    // if (data) {
+    //   console.log("Data:", data?.url);}
 
-    console.log("testHighLight:", testHighlights)
+    // console.log("testHighLight:", testHighlights)
 
     // const state = {
     //   url: initialUrl,
@@ -84,24 +87,33 @@ interface IState {
     
     const  scrollToHighlightFromHash = () => {
         const highlight = getHighlightById(parseIdFromHash());
-    
         if (highlight) {
           scrollViewerTo(highlight);
         }
       };
     
-    useEffect (() => {
-        window.addEventListener(
-          "hashchange",
-          scrollToHighlightFromHash,
-          false
-        );
-      }, [])
+    
+    window.addEventListener(
+      "hashchange",
+      scrollToHighlightFromHash,
+      false
+    );
+
     
     const getHighlightById = (id: string) => {
         const { highlights } = state;
-    
-        return highlights.find((highlight:any) => highlight.id === id);
+        console.log("ID:", id)
+        console.log("Highlights:", highlights)
+        // console.log("Highlight:", highlights)
+        for (let doc of highlights) {
+          let search = doc.sentences.find((sen:any) => sen.senID === id);
+          console.log("List:", doc.sentences)
+          console.log("Result:",search)
+          // return search;
+        }
+        
+        // console.log("Return:", highlights.find((highlight:any) => console.log(Highlight)))
+        return highlights;
       }
 
       const { url, highlights } = state;
@@ -124,8 +136,8 @@ interface IState {
                   pdfDocument={pdfDocument}
                   enableAreaSelection={(event) => event.altKey}
                   onScrollChange={resetHash}
-                  // pdfScaleValue="page-width"
-                  scrollRef={(scrollTo:any) => {
+                  pdfScaleValue="0.8"
+                  scrollRef={(scrollTo) => {
                     scrollViewerTo(scrollTo);
   
                     scrollToHighlightFromHash();
@@ -152,7 +164,22 @@ interface IState {
                     isScrolledTo
                   ) => {
                     const isTextHighlight = !Boolean(highlight.metadata);
-  
+                    
+                    // highlight.sentences.map((sentence: any) => {
+                    //   const component = 
+                    //   <Highlight
+                    //     isScrolledTo={isScrolledTo}
+                    //     position={sentence.sentencePosition}
+                    //     metadata={highlight.metadata}
+                    //   />;
+                    //   return (
+                    //     <Popup
+                    //       // popupContent={<HighlightPopup {...highlight} />}
+                    //       key={index}
+                    //       children={component}
+                    //     />
+                    //   );
+                    // })
                     const component = 
                       <Highlight
                         isScrolledTo={isScrolledTo}

@@ -40,7 +40,8 @@ import type {
   LTWH,
   T_EventBus,
   T_PDFJS_Viewer,
-  T_PDFJS_LinkService
+  T_PDFJS_LinkService,
+  Sentences
 } from "../types";
 import type { PDFDocumentProxy } from "pdfjs-dist/types/display/api";
 
@@ -78,7 +79,7 @@ interface Props<T_HT> {
   ) => JSX.Element;
   highlights: Array<T_HT>;
   onScrollChange: () => void;
-  scrollRef: (scrollTo: (highlight: IHighlight) => void) => void;
+  scrollRef: (scrollTo: (highlight: Sentences) => void) => void;
   pdfDocument: PDFDocumentProxy;
   pdfScaleValue: string;
   onSelectionFinished: (
@@ -385,8 +386,8 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     this.renderHighlights();
   };
 
-  scrollTo = (highlight: IHighlight) => {
-    const { pageNumber, boundingRect, usePdfCoordinates } = highlight.position;
+  scrollTo = (highlight: Sentences) => {
+    const { pageNumber, boundingRect, usePdfCoordinates } = highlight.sentencePosition;
 
     this.viewer.container.removeEventListener("scroll", this.onScroll);
 
@@ -410,7 +411,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
 
     this.setState(
       {
-        scrolledToHighlightId: highlight.id,
+        scrolledToHighlightId: highlight.senID,
       },
       () => this.renderHighlights()
     );

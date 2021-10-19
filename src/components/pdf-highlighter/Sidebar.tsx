@@ -5,9 +5,9 @@ interface Props {
   highlights: Array<IHighlight>;
 }
 
-const updateHashDoc = (highlight: IHighlight) => {
-  document.location.hash = `highlight-${highlight.metadata.docID}`;
-};
+// const updateHashDoc = (highlight: IHighlight) => {
+//   document.location.hash = `highlight-${highlight.id}`;
+// };
 
 const updateHashSen = (sentence: Sentences) => {
   document.location.hash = `sentence-${sentence.senID}`;
@@ -31,22 +31,19 @@ export function Sidebar({
           >
             <div>
               <br/><br/><b>*********************</b><br/>
-              <strong className={highlight.metadata.color + 'Side'} 
-              onClick={() => {
-                updateHashDoc(highlight);
-              }
-            }>{highlight.metadata.title}</strong>
+              <strong className={highlight.metadata.color + 'Side'}>
+                {highlight.metadata.title}</strong>
               {highlight.sentences ? (
                 highlight.sentences.map((sentence:any, i:number) => (
                   <div onClick={() => {
                     updateHashSen(sentence);
                   }}>
                     <blockquote style={{ marginTop: "0.5rem" }}>
-                    {`${sentence.text.slice(0, 150).trim()}...`}<br/>
+                    {`${sentence.text.slice(0, 150).trim()}...`}</blockquote>
                     <b>Similarity: {sentence.euclide}</b>
                     <br/>
                     ------------------------
-                  </blockquote>
+                  
                   </div>
                 ))) : null
               }
