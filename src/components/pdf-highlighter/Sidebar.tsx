@@ -17,7 +17,7 @@ export function Sidebar({
   highlights,
 }: Props) {
   return (
-    <div className="sidebar" style={{ width: "25vw", height: "99vh" }}>
+    <div className="sidebar" style={{ width: "25vw", height: "93vh" }}>
 
       <ul className="sidebar__highlights" style={{paddingLeft:0}}>
         {highlights.map((highlight, index) => (

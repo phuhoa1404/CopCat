@@ -387,6 +387,7 @@ export class PdfHighlighter<T_HT extends Sentences> extends PureComponent<
   };
 
   scrollTo = (highlight: Sentences) => {
+
     const { pageNumber, boundingRect, usePdfCoordinates } = highlight.sentencePosition;
 
     this.viewer.container.removeEventListener("scroll", this.onScroll);

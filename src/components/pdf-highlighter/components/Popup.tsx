@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import MouseMonitor from "./MouseMonitor";
 
 interface Props {
-  children: JSX.Element;
+  children: any;
 }
 
 interface State {

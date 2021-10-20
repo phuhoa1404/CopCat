@@ -10,6 +10,8 @@ interface Props {
     rects: Array<LTWH>;
   };
   onClick?: () => void;
+  onMouseOver?: () => void;
+  onMouseOut?: () => void;
   metadata: {
     // docID: string;
     // title?: string;
@@ -25,6 +27,8 @@ export class Highlight extends Component<Props> {
     const {
       position,
       onClick,
+      onMouseOver,
+      onMouseOut,
       metadata,
       isScrolledTo,
     } = this.props;
@@ -49,6 +53,8 @@ export class Highlight extends Component<Props> {
         <div className="Highlight__parts">
           {rects.map((rect, index) => (
             <div
+              onMouseOver={onMouseOver}
+              onMouseOut={onMouseOut}
               onClick={onClick}
               key={index}
               style={rect}

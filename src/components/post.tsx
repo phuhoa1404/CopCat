@@ -8,7 +8,7 @@ import { Loader } from './loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useHistory, withRouter } from 'react-router-dom';
 import { setData } from './slices/global.slice';
-import type { IHighlight} from "./pdf-highlighter";
+import type { IHighlight, Sentences } from "./pdf-highlighter";
 import {PDF} from './pdf'
 import './commons.scss'
 
@@ -56,6 +56,7 @@ export const Post = () => {
     }
 
     const pdfHighlight: Array<IHighlight> = []
+    const senHighlight: Array<Sentences> = []
 
     return (
         <div>
@@ -100,7 +101,8 @@ export const Post = () => {
             ) : (
                 <div>
                     <PDF url={"https://duy-sieng-hoa.s3.ap-southeast-1.amazonaws.com/Documents/Test-Highlight.pdf"}
-                     highlights={pdfHighlight} />
+                     highlights={pdfHighlight}
+                     highlightSens={senHighlight} />
                 </div>
             )}
         </div>

@@ -25,6 +25,7 @@ const senHighlights: Array<Sentences> = convertSentenceHighlight(testHighlights)
 interface IState {
     url: string;
     highlights: Array<IHighlight>;
+    highlightSens: Array<Sentences>
   }
   
   // const getNextId = () => String(Math.random()).slice(2);
@@ -36,9 +37,6 @@ interface IState {
     document.location.hash = "";
   };
 
-  
-
-  
   // const HighlightPopup = ({
   //   comment,
   // }: {
@@ -64,62 +62,62 @@ interface IState {
     const data = useSelector((state: RootState) => state.global.highlightSentence);
     const returnURL = useSelector((state: RootState) => state.global.url);
     const dataSens = convertSentenceHighlight(data)
-    console.log("URL:", returnURL);
+    // console.log("URL:", returnURL);
     // if (data) {
     //   console.log("Data:", data?.url);}
 
     // console.log("testHighLight:", testHighlights)
 
-    const state = {
-      url: returnURL,
-      highlights: data,
-      highlightSens: dataSens
-    };
-
-    // const state = {
-    //   url: initialUrl,
-    //   highlights: testHighlights
-    //     ? [...testHighlights]
-    //     : [],
-    //   highlightSens: senHighlights ? [...senHighlights] : []
+    // const state: IState = {
+    //   url: returnURL,
+    //   highlights: data,
+    //   highlightSens: dataSens
     // };
+
+    const state = {
+      url: initialUrl,
+      highlights: testHighlights
+        ? [...testHighlights]
+        : [],
+      highlightSens: senHighlights ? [...senHighlights] : []
+    };
   
     // const setState = (url:any, highlight:any) => {
     //   state.url = url;
     //   state.highlights = highlight;
     // }
     
-    const scrollViewerTo = (highlight: any) => {};
+    let scrollViewerTo = (highlight: any) => {};
     
-    const  scrollToHighlightFromHash = () => {
-        const highlight = getHighlightById(parseIdFromHash());
-        if (highlight) {
-          scrollViewerTo(highlight);
+    const scrollToHighlightFromHash = () => {
+        const highlightSen = getHighlightById(parseIdFromHash());
+
+        if (highlightSen) {
+          scrollViewerTo(highlightSen);
         }
       };
-    
-    
-    window.addEventListener(
-      "hashchange",
-      scrollToHighlightFromHash,
-      false
-    );
-
-    
+    useEffect(() => {
+      window.addEventListener(
+        "hashchange",
+        scrollToHighlightFromHash,
+        false);
+    }, [])
+ 
     const getHighlightById = (id: string) => {
-        const { highlights } = state;
-        console.log("ID:", id)
-        console.log("Highlights:", highlights)
+        const { highlightSens } = state;
+        // console.log("ID:", id)
+        // console.log("Highlights:", highlightSens)
+        return highlightSens.find((highlight) => highlight.senID === id);
         // console.log("Highlight:", highlights)
-        for (let doc of highlights) {
-          let search = doc.sentences.find((sen:any) => sen.senID === id);
-          console.log("List:", doc.sentences)
-          console.log("Result:",search)
-          // return search;
-        }
+        // for (let doc of highlights) {
+        //   let search = doc.sentences.find((sen:any) => sen.senID === id);
+        //   console.log("List:", doc.sentences)
+        //   console.log("Result:",search)
+        //   // return search;
+        // }
         
         // console.log("Return:", highlights.find((highlight:any) => console.log(Highlight)))
-        return highlights;
+        // return highlights;
       }
 
       const { url, highlights, highlightSens } = state;
@@ -144,7 +142,7 @@ interface IState {
                   onScrollChange={resetHash}
                   pdfScaleValue="1"
                   scrollRef={(scrollTo) => {
-                    scrollViewerTo(scrollTo);
+                    scrollViewerTo = scrollTo;
   
                     scrollToHighlightFromHash();
                   }} 
@@ -169,7 +167,15 @@ interface IState {
                     screenshot,
                     isScrolledTo
                   ) => {
-                    // const isTextHighlight = !Boolean(highlight.metadata);
+                    const isTextHighlight = !!Boolean(highlight);
+
+                    const component = 
+                      <Highlight
+                        isScrolledTo={isScrolledTo}
+                        position={highlight.position}
+                        metadata={highlight}
+                      />
+                     
                     
                     // highlight.sentences.map((sentence: any) => {
                     //   const component = 
@@ -186,12 +192,12 @@ interface IState {
                     //     />
                     //   );
                     // })
-                    const component = 
-                      <Highlight
-                        isScrolledTo={isScrolledTo}
-                        position={highlight.position}
-                        metadata={highlight}
-                      />;
+                    // const component = 
+                    //   <Highlight
+                    //     isScrolledTo={isScrolledTo}
+                    //     position={highlight.position}
+                    //     metadata={highlight}
+                    //   />;
   
                     return (
                       <Popup
