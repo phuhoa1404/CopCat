@@ -5,7 +5,7 @@ import { Home } from './components/home';
 import { LogIn } from './components/login';
 import { SignUp } from './components/signup';
 import { Post } from './components/post';
-import PDF from './components/pdf'
+import { PDF } from './components/pdf'
 import { PageNotFound } from './components/PageNotFound';
 import { NavBar } from './components/NavBar'
 import { useEffect } from 'react';

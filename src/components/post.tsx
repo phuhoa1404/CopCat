@@ -6,10 +6,17 @@ import { useToggle } from 'react-use';
 import toast from 'react-hot-toast';
 import { Loader } from './loader';
 import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from './reducers';
 import { Link, NavLink, useHistory, withRouter } from 'react-router-dom';
 import { setData } from './slices/global.slice';
-import type { IHighlight, Sentences } from "./pdf-highlighter";
-import {PDF} from './pdf'
+import type { PdfLoader,
+    PdfHighlighter,
+    Tip,
+    Highlight,
+    Popup,
+    IHighlight,
+    Sentences } from "./pdf-highlighter";
+import { PDF } from './pdf'
 import './commons.scss'
 
 
@@ -18,6 +25,7 @@ export const Post = () => {
     const [selectedFile, setSelectedFile] = React.useState<File>();
     const [loading, setLoading] = useState(false);
     const [pdfView, setPDFview] = useState(false)
+    const history = useHistory<any>();
     const dispatch = useDispatch();
 
  
@@ -36,6 +44,7 @@ export const Post = () => {
             var formData = new FormData();
             formData.append("file",selectedFile);
             formData.append("filename", selectedFile.name)
+            // setPDFview(true);
 
             const { data: apiResponse } =  await Flask.post('/search',formData);
             console.log("Return", apiResponse)
@@ -55,8 +64,16 @@ export const Post = () => {
         setPDFview(true);
     }
 
+    const jumpPDF = () => {
+        history.push("/pdf")
+    }
+
+
     const pdfHighlight: Array<IHighlight> = []
     const senHighlight: Array<Sentences> = []
+
+    const dataReducer:Array<IHighlight> = useSelector((state: RootState) => state.data.data);
+        console.log("Data Reducers:", dataReducer)
 
     return (
         <div>
@@ -96,13 +113,14 @@ export const Post = () => {
                             </div>
                         </label>
                     </span>
+                    
                 </div>
             </div>
             ) : (
                 <div>
-                    <PDF url={"https://duy-sieng-hoa.s3.ap-southeast-1.amazonaws.com/Documents/Test-Highlight.pdf"}
-                     highlights={pdfHighlight}
-                     highlightSens={senHighlight} />
+                    {/* <Link to="/signup"> */}
+                        <button onClick={jumpPDF}>TO PDF!</button>
+                    {/* </Link> */}
                 </div>
             )}
         </div>

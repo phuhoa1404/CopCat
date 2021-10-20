@@ -13,12 +13,13 @@ import {
 import "./pdf-highlighter/style/App.css";
 
 import type { IHighlight } from "./pdf-highlighter";
-import { txtHighlights as _testHighlights } from "./pdf-highlighter/highlight-txt";
+import { txtHighlights2 as _testHighlights } from "./pdf-highlighter/highlight-txt";
 import { Spinner } from "./pdf-highlighter/Spinner";
 import { Sidebar } from "./pdf-highlighter/Sidebar";
 import { convertSentenceHighlight } from './utils/sentence.util';
 
 const testHighlights: Array<IHighlight> = _testHighlights;
+console.log("Test Highlight:", testHighlights)
 const senHighlights: Array<Sentences> = convertSentenceHighlight(testHighlights);
 
 
@@ -52,6 +53,8 @@ interface IState {
   const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480.pdf";
 
   const LOCAL_PDF_URL = 'https://duy-sieng-hoa.s3.ap-southeast-1.amazonaws.com/Documents/Test-Highlight.pdf'
+
+  const S3_URL = "https://duy-sieng-hoa.s3.ap-southeast-1.amazonaws.com/Documents/Test20-10.pdf"
   
   const searchParams = new URLSearchParams(document.location.search);
   
@@ -59,39 +62,45 @@ interface IState {
 
   export const PDF = (props: IState) => {
 
-    const data = useSelector((state: RootState) => state.global.highlightSentence);
-    const returnURL = useSelector((state: RootState) => state.global.url);
-    const dataSens = convertSentenceHighlight(data)
+    const data:Array<IHighlight> = useSelector((state: RootState) => state.data.data);
+    const returnURL = useSelector((state: RootState) => state.data.url);
+    const dataSens:Array<Sentences> = convertSentenceHighlight(data)
     // console.log("URL:", returnURL);
     // if (data) {
-    //   console.log("Data:", data?.url);}
+      console.log("Data:", data);
 
     // console.log("testHighLight:", testHighlights)
 
-    // const state: IState = {
-    //   url: returnURL,
-    //   highlights: data,
-    //   highlightSens: dataSens
-    // };
-
     const state = {
-      url: initialUrl,
-      highlights: testHighlights
-        ? [...testHighlights]
-        : [],
-      highlightSens: senHighlights ? [...senHighlights] : []
+      url: returnURL,
+      highlights: data,
+      highlightSens: dataSens
     };
+    // console.log("data:", data)
+    // console.log("dataSens:", dataSens)
+
+    // const state = {
+    //   url: S3_URL,
+    //   highlights: testHighlights
+    //     ? [...testHighlights]
+    //     : [],
+    //   highlightSens: senHighlights ? [...senHighlights] : []
+    // };
   
     // const setState = (url:any, highlight:any) => {
     //   state.url = url;
     //   state.highlights = highlight;
     // }
     
-    let scrollViewerTo = (highlight: any) => {};
+    let scrollViewerTo = (highlight: any) => {
+       console.log("scrollViewerTo in PDF")
+    };
+
+    
     
     const scrollToHighlightFromHash = () => {
         const highlightSen = getHighlightById(parseIdFromHash());
-
+        console.log("highlightSen",highlightSen)
         if (highlightSen) {
           scrollViewerTo(highlightSen);
         }
@@ -108,19 +117,9 @@ interface IState {
         // console.log("ID:", id)
         // console.log("Highlights:", highlightSens)
         return highlightSens.find((highlight) => highlight.senID === id);
-        // console.log("Highlight:", highlights)
-        // for (let doc of highlights) {
-        //   let search = doc.sentences.find((sen:any) => sen.senID === id);
-        //   console.log("List:", doc.sentences)
-        //   console.log("Result:",search)
-        //   // return search;
-        // }
-        
-        // console.log("Return:", highlights.find((highlight:any) => console.log(Highlight)))
-        // return highlights;
       }
 
-      const { url, highlights, highlightSens } = state;
+    const { url, highlights, highlightSens } = state;
   
       return (
         <div className="App" style={{ display: "flex", height: "90vh" }}>
@@ -216,5 +215,3 @@ interface IState {
       );
       
     }
-
-export default PDF

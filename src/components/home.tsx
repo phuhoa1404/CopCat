@@ -5,11 +5,11 @@ import { RootState } from './reducers';
 
 
 export const Home = () => {
-    const dataArr = useSelector(
-        (state: RootState) => state.global.dataMatch,
-      );
+    // const dataArr = useSelector(
+    //     (state: RootState) => state.global.dataMatch,
+    //   );
       
-      console.log("Data:", dataArr)
+    //   console.log("Data:", dataArr)
 
     return(
         <div>

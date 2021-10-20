@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import { loginReducer } from './login';
-import { globalReducer } from '../slices/global.slice';
+import { dataReducer } from '../slices/global.slice';
 
 export const rootReducer = combineReducers({
     login: loginReducer,
-    global: globalReducer,
+    data: dataReducer,
   });
   
   export type RootState = ReturnType<typeof rootReducer>;

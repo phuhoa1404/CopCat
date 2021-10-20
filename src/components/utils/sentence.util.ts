@@ -44,8 +44,9 @@ export const convertHighlight = (input: any) => {
 }
 
 export const convertSentenceHighlight = (input: Array<IHighlight>) => {
+  // if (!input) return;
   const output: Array<Sentences> = [];
-  input.map((doc:IHighlight, index:number) => {
+  input.map((doc:IHighlight) => {
     doc.sentences.map((sen: Sentences) => {
       output.push(sen);
     })

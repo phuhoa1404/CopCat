@@ -23,7 +23,7 @@ export function Sidebar({
         {highlights.map((highlight, index) => (
           <li
             key={index}
-            style={{width: '22vw'}}
+            style={{width: '23.5vw'}}
             className="sidebar__highlight"
             // onClick={() => {
             //   updateHashDoc(highlight);

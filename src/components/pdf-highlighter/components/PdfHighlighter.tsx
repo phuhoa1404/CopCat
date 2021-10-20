@@ -308,6 +308,8 @@ export class PdfHighlighter<T_HT extends Sentences> extends PureComponent<
                 }
 
                 const isScrolledTo = Boolean(scrolledToHighlightId === senID);
+                console.log("Boolean:",scrolledToHighlightId, " >< ", senID, "isScrolledTo",isScrolledTo)
+
 
                 return highlightTransform(
                   viewportHighlight,
@@ -388,6 +390,8 @@ export class PdfHighlighter<T_HT extends Sentences> extends PureComponent<
 
   scrollTo = (highlight: Sentences) => {
 
+    console.log("Scroll To in Highlighter",highlight)
+
     const { pageNumber, boundingRect, usePdfCoordinates } = highlight.sentencePosition;
 
     this.viewer.container.removeEventListener("scroll", this.onScroll);
@@ -410,6 +414,8 @@ export class PdfHighlighter<T_HT extends Sentences> extends PureComponent<
       ],
     });
 
+    console.log("senID",highlight.senID)
+
     this.setState(
       {
         scrolledToHighlightId: highlight.senID,
@@ -424,8 +430,10 @@ export class PdfHighlighter<T_HT extends Sentences> extends PureComponent<
   };
 
   onDocumentReady = () => {
-    const { scrollRef } = this.props;
 
+    console.log("onDocumentReady")
+    const { scrollRef } = this.props;
+    console.log("scrollRef", scrollRef)
     this.handleScaleValue();
 
     scrollRef(this.scrollTo);
